@@ -9,7 +9,7 @@ $(function() {
             dataType: 'json',
             data: { text: $(this).find('textarea').val() },
             success: function(data) {
-                $('#statuses').prepend('<div>' + data.text + '</div>');
+                $('#statuses').prepend('<div class="post"><div class="text">' + data.text + '</div></div>');
                 $('#new-status').find('textarea').val('');
             }
         });
@@ -17,7 +17,7 @@ $(function() {
 
     $.get('../post', function(posts) {
       for(var i = 0; i < posts.length; ++i) {
-        $('#statuses').prepend('<div>' + posts[i].text + '</div>');
+        $('#statuses').prepend('<div class="post"><div class="text">' + posts[i].text + '</div></div>');
       }
     });
 

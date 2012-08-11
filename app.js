@@ -20,6 +20,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, 'presentation')));
 });
 
 app.configure('development', function(){
@@ -33,14 +34,18 @@ var basic = require('./basic');
 app.get('/basic', basic.index);
 app.get('/basic/app.js', basic.appjs);
 
-var withDelete = require('./with-delete');
-app.get('/with-delete', withDelete.index);
-app.get('/with-delete/app.js', withDelete.appjs);
-
 var withDeleteWithVoting = require('./with-delete-with-voting');
 app.get('/with-delete-with-voting', withDeleteWithVoting.index);
 app.get('/with-delete-with-voting/app.js', withDeleteWithVoting.appjs);
 
+var withSummary = require('./with-summary');
+app.get('/with-summary', withSummary.index);
+app.get('/with-summary/app.js', withSummary.appjs);
+
+var refactor = require('./backbone-refactor');
+app.get('/refactor', refactor.index);
+app.get('/refactor/app.js', refactor.appjs);
+app.get('/refactor/bootstrap.js', refactor.bootstrapjs);
 
 // Using in-process memory to store state. This is 
 // for a demo only, do not do this in a real app. Use

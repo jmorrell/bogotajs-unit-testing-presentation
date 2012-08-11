@@ -5,9 +5,12 @@
   <title>Monologue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/app.css">
   <script src="js/underscore.js"></script>
   <script src="js/jquery.js"></script>
-  <script src="./with-delete-with-voting/app.js"></script>
+  <script src="js/backbone.js"></script>
+  <script src="./refactor/app.js"></script>
+  <script src="./refactor/bootstrap.js"></script>
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -18,11 +21,23 @@
   </div>
 </div>
 <div class="container">
-  <form id="new-status">
+  <form id="new-status" action>
     <label for="status_text">Status</label>
     <textarea id="status_text" name="status" placeholder="What are your inner most thoughts?"></textarea>
     <button type="submit" class="btn">Post Update</button>
   </form>
+
+  <div id="summary" class="row">
+    <span class="span2">
+      <strong># Posts:</strong> <span class="num-posts">0</span>
+    </span>
+    <span class="span2">
+      <strong># Likes:</strong> <span class="num-likes">0</span>
+    </span>
+    <span class="span2">
+      <strong># Dislikes:</strong> <span class="num-dislikes">0</span>
+    </span>
+  </div>
 
   <div id="statuses"></div>
 </div>

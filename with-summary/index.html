@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="css/app.css">
+  <script src="js/underscore.js"></script>
   <script src="js/jquery.js"></script>
-  <script src="./basic/app.js"></script>
+  <script src="./with-summary/app.js"></script>
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -24,9 +25,19 @@
     <button type="submit" class="btn">Post Update</button>
   </form>
 
-  <ul id="statuses">
+  <div id="summary" class="row">
+    <span class="span2">
+      <strong># Posts:</strong> <span class="num-posts">0</span>
+    </span>
+    <span class="span2">
+      <strong># Likes:</strong> <span class="num-likes">0</span>
+    </span>
+    <span class="span2">
+      <strong># Dislikes:</strong> <span class="num-dislikes">0</span>
+    </span>
+  </div>
 
-  </ul>
+  <div id="statuses"></div>
 </div>
 </body>
 </html>

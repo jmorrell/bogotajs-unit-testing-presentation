@@ -2,17 +2,12 @@
 describe('Post Model', function() {
 
   beforeEach(function() {
-    var self = this;
-
     this.post = new Post({
       text: "This is a test post."
     });
+
     this.xhr = sinon.useFakeXMLHttpRequest();
-    this.requests = [];
-    this.xhr.onCreate = function(req) {
-      self.requests.push(req);
-    };
-      
+    this.xhr.onCreate = function(req) {};
   });
 
   afterEach(function() {
@@ -20,13 +15,12 @@ describe('Post Model', function() {
   });
 
   it('Should be initialized', function() {
-    expect(this.post).toExist();
+    expect(this.post).toBeDefined();
   });
 
   it('Should have some default values', function() {
-    var data = this.post.toJSON();
-    expect(data.likes).toEqual(0);
-    expect(data.dislikes).toEqual(0);
+    expect(this.post.get('likes')).toEqual(0);
+    expect(this.post.get('dislikes')).toEqual(0);
   });
 
   it('Should not have an id until it\'s been saved', function() {
@@ -37,6 +31,12 @@ describe('Post Model', function() {
     expect(this.post.get('text')).toEqual("This is a test post.");
     expect(this.post.get('likes')).toEqual(0);
     expect(this.post.get('dislikes')).toEqual(0);
+  });
+
+  it('should allow you to set values', function() {
+    expect(this.post.get('text')).toEqual("This is a test post.");
+    this.post.set({ text: 'This is a different string.' });
+    expect(this.post.get('text')).toEqual("This is a different string.");
   });
 
   it('should allow you to vote up', function() {
@@ -66,14 +66,15 @@ describe('Post Model', function() {
     expect(this.post.getTotal()).toEqual(-1);
   });
 
-  /*
   it('should trigger a change event on vote', function() {
+    var called = false;
     this.post.on('change', function() {
-      expect(1).toExist(); // ?
+      called = true;
     });
     this.post.like();
+
+    expect(called).toBeTruthy();
   });
-  */
 
   it('should trigger a change event on vote', function() {
     var spy = sinon.spy();
@@ -90,29 +91,37 @@ describe('Post Model', function() {
 
   // Show example with jQuery.ajax stubing
   it('should know how to save itself to the server', function() {
-    sinon.stub(jQuery, 'ajax');
+    sinon.stub(jQuery, 'ajax').yieldsTo('success', {
+      text: 'This is a test.',
+      id: 1,
+      likes: 0,
+      dislikes: 0
+    });
+
     this.post.save();
 
-    expect(jQuery.ajax.calledWithMatch({ 
-      method: 'POST',
-      url: "../post",
-      dataType: 'json',
-      data: {
-        text: "This is a test post.",
-        likes: 0,
-        dislikes: 0
-      }
-    })).toBeTruthy();
+    var call = jQuery.ajax.firstCall;
+
+    expect(call.args[0].type).toEqual('POST');
+    expect(call.args[0].url).toEqual('../post');
+    expect(call.args[0].data).toEqual('{"likes":0,"dislikes":0,"text":"This is a test post."}');
+
+    jQuery.ajax.restore();
   });
 
   // Without tying implementation to jQuery
   it('should POST to ../post to save itself', function() {
-    this.post.save();
-    expect(this.requests.length).toEqual(1);
-    expect(this.requests[0].url).toEqual('../post');
-    expect(this.requests[0].method).toEqual('POST');
+    var spy = sinon.spy(this.xhr, 'onCreate');
 
-    console.log(this.requests[0]);
+    this.post.save();
+
+    var arg = spy.firstCall.args[0];
+
+    expect(arg.url).toEqual('../post');
+    expect(arg.method).toEqual('POST');
+    expect(arg.requestBody).toEqual('{"likes":0,"dislikes":0,"text":"This is a test post."}');
+
+    this.xhr.onCreate.restore();
   });
 
 });
@@ -127,12 +136,11 @@ describe('Post after saving to the server', function() {
     });
 
     this.server = sinon.fakeServer.create();
-    this.server.respondWith('POST', '../post',
-      [201, { "Content-Type": "application/json" },
-       '{ id: 1, text: "This is a test post.", likes: 0, dislikes: 0 }']);
-
+      
     this.post.save();
-    this.server.respond();
+    this.server.respond('POST', '../post',
+      [201, { 'Content-Type': 'application/json' },
+        '{ "id": 1, "text": "This is a test post.", "likes": 0, "dislikes": 0}']);
   });
 
   afterEach(function() {
@@ -144,13 +152,23 @@ describe('Post after saving to the server', function() {
   });
 
   it('should DELETE to ../post/:id to delete itself', function() {
-    this.server.respondWith('DELETE', '../post/1', [204, {}, '']);
-    this.post.delete();
-    this.server.respond();
+    this.post.destroy();
+    this.server.respond('DELETE', '../post/1', [204, {}, '']);
 
+    var req = this.server.requests[1];
+    expect(req.method).toEqual('DELETE');
+    expect(req.url).toEqual('../post/1');
   });
 
   it('should PUT to ../post/:id to update itself', function() {
+    this.post.set({ text: 'This is a new string' });
+    this.post.save();
+    this.server.respond('PUT', '../post/1', [200, {}, '{"text":"This is a new string"}']);
 
+    expect(this.post.get('text')).toEqual("This is a new string");
+
+    var req = this.server.requests[1];
+    expect(req.method).toEqual('PUT');
+    expect(req.url).toEqual('../post/1');
   });
 });
