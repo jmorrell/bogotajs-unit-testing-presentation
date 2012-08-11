@@ -10,22 +10,26 @@ describe('PostView', function() {
   });
 
   it('should exist', function() {
-    expect(this.view).toBeTruthy(); 
+    expect(this.view).toBeDefined();
   });
 
   it('should render a dom element to this.el', function() {
     expect(this.view.el).toBeTruthy();
-    expect(this.view.el.tagName).toEqual('DIV');
+    expect($(this.view.el)).toBe('div');
+    expect($(this.view.el)).toHaveClass('post');
   });
   
   it('should have certain dom elements', function() {
-    expect(this.view.el.className).toEqual('post');
-
     expect($(this.view.el).find('.text').length).toBeTruthy();
     expect($(this.view.el).find('.like').length).toBeTruthy();
     expect($(this.view.el).find('.dislike').length).toBeTruthy();
     expect($(this.view.el).find('.close').length).toBeTruthy();
     expect($(this.view.el).find('.vote').length).toBeTruthy();
+  });
+
+  it('should fill in the DOM with data from the post', function() {
+    expect($(this.view.el).find('.text').text()).toEqual('this is a test');
+    expect($(this.view.el).find('.vote').text()).toEqual('0');
   });
 
   it('should call like on the model when .like is clicked', function() {
@@ -55,7 +59,6 @@ describe('PostView', function() {
     // Change the post text
     this.post.set({ text: 'this is a new string' });
 
-    expect($text.text()).not.toEqual('this is a test');
     expect($text.text()).toEqual('this is a new string');
   });
 
@@ -63,9 +66,9 @@ describe('PostView', function() {
     var $vote = $(this.view.el).find('.vote');
 
     expect($vote.text()).toEqual('0');
-    this.post.like();
+    this.post.set({ likes: 1 });
     expect($vote.text()).toEqual('1');
-    this.post.dislike();
+    this.post.set({ dislikes: 1 });
     expect($vote.text()).toEqual('0');
   });
 

@@ -12,7 +12,6 @@
   <script type="text/javascript" src="vendor/jasmine-jquery-1.3.1.js"></script>
   <script type="text/javascript" src="vendor/sinon-1.4.2.js"></script>
   <script type="text/javascript" src="vendor/jasmine-sinon.js"></script>
-  <script type="text/javascript" src="vendor/jasmine-yeti-adaptor.js"></script>
 
   <!-- fixtures -->
   <script type="text/javascript" src="fixtures.js"></script>
@@ -23,12 +22,18 @@
   <script type="text/javascript" src="../public/js/backbone.js"></script>
   <script type="text/javascript" src="../backbone-refactor/app.js"></script>
 
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/backbone.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+
   <!-- include spec files here... -->
   <script type="text/javascript" src="spec/post.js"></script>
-  <!-- <script type="text/javascript" src="spec/post-view.js"></script> -->
-  <!-- <script type="text/javascript" src="spec/post-list.js"></script> -->
-  <!-- <script type="text/javascript" src="spec/post-list-view.js"></script> -->
-  <!-- <script type="text/javascript" src="spec/input-view.js"></script> -->
+  <script type="text/javascript" src="spec/post-view.js"></script>
+  <script type="text/javascript" src="spec/post-list.js"></script>
+  <script type="text/javascript" src="spec/post-list-view.js"></script>
+  <script type="text/javascript" src="spec/input-view.js"></script>
+  <script type="text/javascript" src="spec/ie-fail.js"></script>
 
   <script type="text/javascript">
     (function() {
@@ -42,11 +47,6 @@
       jasmineEnv.specFilter = function(spec) {
         return trivialReporter.specFilter(spec);
       };
-
-      // If you're not running it through Yeti don't call the hookup method
-      if (window.$yetify !== undefined) {
-          BUNYIP.hookup(jasmineEnv);
-      }
 
       var currentWindowOnload = window.onload;
 

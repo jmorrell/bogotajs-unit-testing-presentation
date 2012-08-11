@@ -376,7 +376,6 @@ $(function() {
 });
             </code></pre>
           </div>
-          <p class="fragment">Ahora intenta escribir pruebas para eso</p>
         </section>
 
         <section>
@@ -835,6 +834,138 @@ it('should call callback after 5 seconds', function() {
 });
           </code></pre>
 
+        </section>
+
+        <section>
+          <p>
+            Bueno, pero todo eso es manipulando un objeto de javascript. 
+          </p>
+
+          <p class="vertical-spacing">
+            ¿Como puedo escribir tests cuando tengo que manipular el DOM?
+          </p>
+
+        </section>
+
+        <section>
+          
+          <img src="images/application-breakdown.png" />
+
+        </section>
+
+        <section>
+          <pre><code contenteditable>var post = new Post({ text: "This is a test" });
+
+var postView = new PostView({
+  model: post
+});
+
+// postView = {
+//   model: Post(...),
+//   el: 
+//      &lt;div class="post"&gt;
+//        &lt;button class="close"&gt;&times;&lt;/button&gt;
+//        &lt;div class="text"&gt;&lt;/div&gt;
+//        &lt;div class="score"&gt;
+//          Score: &lt;span class="vote"&gt;&lt;/span&gt;
+//        &lt;/div&gt;
+//        &lt;button class="like"&gt;+&lt;/button&gt;
+//        &lt;button class="dislike"&gt;-&lt;/button&gt;
+//      &lt;/div&gt;
+// }</code></pre>
+
+<p>Se puede agregar este element al DOM con:</p>
+
+<pre><code>$('#id').append(postView.el);</code></pre>
+
+        </section>
+
+        <section>
+
+          <pre><code contenteditable>
+describe('PostView', function() {
+  
+  beforeEach(function() {
+    this.post = new Post({ text: 'this is a test' });
+
+    this.view = new PostView({
+      model: this.post
+    });
+  });
+
+  it('should render a dom element to this.el', function() {
+    expect(this.view.el).toBeTruthy();
+    expect(this.view.el.tagName).toEqual('DIV');
+    expect(this.view.el.className).toEqual('post');
+  });
+
+  it('should have certain dom elements', function() {
+    expect($(this.view.el).find('.text').length).toEqual(1);
+    expect($(this.view.el).find('.like').length).toEqual(1);
+    expect($(this.view.el).find('.dislike').length).toEqual(1);
+    expect($(this.view.el).find('.close').length).toEqual(1);
+    expect($(this.view.el).find('.vote').length).toEqual(1);
+  });
+  
+  // ...
+          </code></pre>
+
+        </section>
+
+        <section>
+
+          <h3 style="margin-top: -2em;">Rendering</h3> 
+          <pre><code contenteditable>
+it('should fill in the DOM with data from the post', function() {
+  expect($(this.view.el).find('.text').text())
+    .toEqual('this is a test');
+  expect($(this.view.el).find('.vote').text()).toEqual('0');
+});
+
+it('should update the text of .text when the model text changes', function() {
+  var $text = $(this.view.el).find('.text');
+  expect($text.text()).toEqual('this is a test');
+
+  // Change the post text
+  this.post.set({ text: 'this is a new string' });
+
+  expect($text.text()).toEqual('this is a new string');
+});
+
+
+it('should change the vote when the vote count changes', function() {
+  var $vote = $(this.view.el).find('.vote');
+
+  expect($vote.text()).toEqual('0');
+  this.post.set({ likes: 1 });
+  expect($vote.text()).toEqual('1');
+  this.post.set({ dislikes: 1 });
+  expect($vote.text()).toEqual('0');
+});</code></pre>
+
+        </section>
+
+        <section>
+          <h3>User Interaction</h3> 
+          <pre><code contenteditable>it('should call like on the model when .like is clicked', function() {
+  var stub = sinon.stub(this.post, 'like');
+
+  // Click on the .like DOM element
+  $(this.view.el).find('.like').click();
+
+  expect(stub).toHaveBeenCalled();
+  stub.restore();
+});
+
+it('should call destroy on the model when .close is clicked', function() {
+  var stub = sinon.stub(this.post, 'destroy');
+
+  // Click on the .dislike DOM element
+  $(this.view.el).find('.close').click();
+
+  expect(stub).toHaveBeenCalled();
+  stub.restore();
+});</code></pre>
         </section>
 
         <section>

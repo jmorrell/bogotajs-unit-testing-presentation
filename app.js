@@ -47,6 +47,7 @@ app.get('/refactor', refactor.index);
 app.get('/refactor/app.js', refactor.appjs);
 app.get('/refactor/bootstrap.js', refactor.bootstrapjs);
 
+
 // Using in-process memory to store state. This is 
 // for a demo only, do not do this in a real app. Use
 // a database.

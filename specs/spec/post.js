@@ -171,4 +171,5 @@ describe('Post after saving to the server', function() {
     expect(req.method).toEqual('PUT');
     expect(req.url).toEqual('../post/1');
   });
-});
+
+ });

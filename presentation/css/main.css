@@ -899,3 +899,10 @@ body {
 	display: none;
 }
 
+/*********************************************
+ * ADDITIONAL STYLES
+ *********************************************/
+
+.vertical-spacing {
+  margin-top: 2em;
+}
