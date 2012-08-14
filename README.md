@@ -1,4 +1,15 @@
 
+## Links
+
+* [Jasmine](http://pivotal.github.com/jasmine/)
+* [Sinon.js](http://sinonjs.org/)
+* [Jasmine-Sinon](https://github.com/froots/jasmine-sinon) - Sinon matchers for Jasmine
+* [Grunt](https://github.com/cowboy/grunt) - node.js build tool
+* [grunt-jasmine-task](https://github.com/creynders/grunt-jasmine-task) - runs jasmine in Phantom.js
+* [js-test-driver](http://code.google.com/p/js-test-driver/)
+* [Jasmine js-test-driver adapter](https://github.com/ibolmo/jasmine-jstd-adapter)
+* [Reveal.js](http://lab.hakim.se/reveal-js/) - HTML5 Presentation Framework
+* [Nodejitsu](http://nodejitsu.com/) - Node.js PAAS. Currently hosting the presentation :)
 
 ## Requirements
 
