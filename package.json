@@ -1,22 +1,27 @@
 {
   "name": "bogotajs_unit_testing_presentation",
-  "version": "0.0.1",
+  "version": "0.0.1-2",
   "private": true,
   "author": {
     "name": "Jeremy Morrell",
     "email": "morrell.jeremy@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmorrell/bogotajs-unit-testing-presentation.git"
+  },
   "scripts": {
-    "start": "node app",
+    "start": "node app.js",
     "test": "grunt jasmine"
   },
   "engines": {
-    "node": "~0.6.19"
+    "node": ">= 0.8"
   },
   "dependencies": {
     "express": "3.0.0rc2",
     "underscore": "~1.3.3",
     "grunt": "~0.3.12",
     "grunt-jasmine-task": "~0.2.2"
-  }
+  },
+  "subdomain": "bogotajs-unit-testing"
 }
